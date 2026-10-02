@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A sample care-management workspace for organizing daily routines and practical support." />
+  <title>Care Management | Sample Workspace</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="app.js?v=6" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Care Management home">
+      <span class="brand-mark" aria-hidden="true">C</span>
+      <span>Care Management</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#trackers">Trackers</a>
+      <a href="#care-information">Care information</a>
+      <a href="#approach">Approach</a>
+    </nav>
+    <span class="demo-badge"><span></span>Sample workspace</span>
+  </header>
+
+  <main id="top">
+    <section class="intro-band" aria-labelledby="page-title">
+      <div class="intro-copy">
+        <p class="eyebrow">A practical care-management prototype</p>
+        <h1 id="page-title">Care, organized around real life.</h1>
+        <p>See the whole week at a glance, with a simple daily checklist available when you want it.</p>
+      </div>
+      <div class="privacy-note">
+        <span class="privacy-icon" aria-hidden="true">i</span>
+        <p><strong>Sample data only.</strong> Changes are saved in this browser and are not sent to a server.</p>
+      </div>
+    </section>
+
+    <section class="workspace" id="trackers" aria-labelledby="trackers-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Your workspace</p>
+          <h2 id="trackers-title">Weekly trackers</h2>
+        </div>
+        <div class="week-controls">
+          <span id="week-label" class="week-label"></span>
+          <button id="reset-demo" class="quiet-button" type="button" title="Restore sample trackers">Restore sample</button>
+        </div>
+      </div>
+
+      <div class="tracker-view-controls">
+        <div class="segmented-control" role="group" aria-label="Tracker view">
+          <button id="week-view-button" class="segment-button is-selected" type="button" aria-pressed="true">Week view</button>
+          <button id="checklist-view-button" class="segment-button" type="button" aria-pressed="false">Daily checklist</button>
+        </div>
+        <label id="checklist-day-control" class="checklist-day-control" hidden>
+          Day
+          <select id="checklist-day" aria-label="Checklist day"></select>
+        </label>
+      </div>
+
+      <div id="tracker-grid" class="tracker-grid"></div>
+
+      <form id="new-tracker-form" class="new-tracker-form">
+        <label for="new-tracker-name">Create a tracker</label>
+        <div class="new-tracker-controls">
+          <input id="new-tracker-name" name="name" type="text" maxlength="48" placeholder="Name a routine or area" required />
+          <button class="primary-button" type="submit"><span aria-hidden="true">+</span> Add tracker</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="information-workspace" id="care-information" aria-labelledby="information-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Reference information</p>
+          <h2 id="information-title">Care information</h2>
+        </div>
+        <span class="record-count" id="record-count">0 records</span>
+      </div>
+      <p class="information-intro">Keep useful details such as care contacts, medication references, and equipment notes together, separate from checklists.</p>
+      <div class="information-warning"><strong>Public demo:</strong> use fictional sample data here. Records are stored only in this browser, but this prototype is not designed for real sensitive health information.</div>
+
+      <form id="information-form" class="information-form">
+        <input id="record-id" name="id" type="hidden" />
+        <div class="form-topline">
+          <label for="record-type">Record type</label>
+          <select id="record-type" name="type">
+            <option value="contact">Care contact</option>
+            <option value="medication">Medication</option>
+            <option value="reference">Care reference</option>
+          </select>
+        </div>
+
+        <div class="record-fields" data-fields="contact">
+          <label class="field-wide">Organization or service<input name="organization" type="text" maxlength="100" placeholder="Example: Community Clinic" /></label>
+          <label>Contact person<input name="person" type="text" maxlength="100" placeholder="Optional" /></label>
+          <label>Phone<input name="phone" type="tel" maxlength="40" placeholder="Optional" /></label>
+          <label class="field-wide">Street address<input name="address" type="text" maxlength="180" placeholder="Street address" /></label>
+          <label>City / region<input name="city" type="text" maxlength="100" placeholder="City or region" /></label>
+          <label>Website<input name="website" type="url" maxlength="240" placeholder="https://" /></label>
+          <label class="field-wide">Notes<textarea name="notes" rows="2" maxlength="500" placeholder="What would be useful for a caregiver to know?"></textarea></label>
+        </div>
+
+        <div class="record-fields" data-fields="medication" hidden>
+          <label class="field-wide">Medication name<input name="medicationName" type="text" maxlength="120" placeholder="Use fictional data in this public demo" /></label>
+          <label>Strength<input name="strength" type="text" maxlength="60" placeholder="Example: sample strength" /></label>
+          <label>Form<input name="form" type="text" maxlength="60" placeholder="Tablet, liquid, etc." /></label>
+          <label class="field-wide">Schedule or directions<textarea name="schedule" rows="2" maxlength="400" placeholder="Reference only; do not use this demo as dosing guidance."></textarea></label>
+          <label>Prescriber<input name="prescriber" type="text" maxlength="100" placeholder="Optional" /></label>
+          <label>Pharmacy<input name="pharmacy" type="text" maxlength="100" placeholder="Optional" /></label>
+          <label class="field-wide">Notes<textarea name="medicationNotes" rows="2" maxlength="500" placeholder="Optional reference notes"></textarea></label>
+        </div>
+
+        <div class="record-fields" data-fields="reference" hidden>
+          <label>Title<input name="referenceTitle" type="text" maxlength="120" placeholder="Example: equipment setup" /></label>
+          <label>Location<input name="location" type="text" maxlength="120" placeholder="Where this applies or is stored" /></label>
+          <label class="field-wide">Description or notes<textarea name="description" rows="3" maxlength="700" placeholder="Add a concise reference note."></textarea></label>
+        </div>
+
+        <div class="form-actions">
+          <button class="primary-button" type="submit">Save record</button>
+          <button id="cancel-edit" class="quiet-button" type="button" hidden>Cancel edit</button>
+        </div>
+      </form>
+      <div id="information-records" class="information-records" aria-live="polite"></div>
+    </section>
+
+    <section class="approach-section" id="approach" aria-labelledby="approach-title">
+      <div class="approach-heading">
+        <p class="eyebrow">Design principle</p>
+        <h2 id="approach-title">Useful first. More detailed when needed.</h2>
+      </div>
+      <p>Care records should preserve the detail people need without making everyday tracking harder. The structure can grow over time, while essential routines stay simple to record.</p>
+    </section>
+
+    <footer>
+      <span>Care Management prototype</span>
+      <span>All tracker content shown here is fictional sample data.</span>
+    </footer>
+  </main>
+</body>
+</html>
