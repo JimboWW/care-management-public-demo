@@ -35,7 +35,8 @@ const SAMPLE_TRACKERS = [
 
 const grid = document.getElementById('tracker-grid');
 const newTrackerForm = document.getElementById('new-tracker-form');
-const resetButton = document.getElementById('reset-demo');
+const resetDemoButton = document.getElementById('reset-demo');
+const resetWeekButton = document.getElementById('reset-week');
 const informationForm = document.getElementById('information-form');
 const informationList = document.getElementById('information-records');
 const recordType = document.getElementById('record-type');
@@ -207,6 +208,9 @@ function renderTrackers() {
           const toggle = document.createElement('button');
           toggle.className = 'week-cell';
           toggle.type = 'button';
+          toggle.dataset.trackerId = tracker.id;
+          toggle.dataset.taskId = task.id;
+          toggle.dataset.dayIndex = String(dayIndex);
           toggle.setAttribute('aria-pressed', String(done));
           const fullDay = weekDates[dayIndex].toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
           toggle.setAttribute('aria-label', `${task.label}, ${fullDay}: ${done ? 'completed' : 'not completed'}`);
@@ -234,6 +238,9 @@ function renderTrackers() {
         const toggle = document.createElement('button');
         toggle.className = 'task-toggle';
         toggle.type = 'button';
+        toggle.dataset.trackerId = tracker.id;
+        toggle.dataset.taskId = task.id;
+        toggle.dataset.dayIndex = String(selectedDay);
         toggle.setAttribute('aria-pressed', String(done));
         toggle.setAttribute('aria-label', `${done ? 'Mark incomplete' : 'Mark complete'}: ${task.label} for ${WEEKDAYS[selectedDay]}`);
         toggle.textContent = done ? '✓' : '';
@@ -298,6 +305,20 @@ function toggleCompletion(trackerId, taskId, dayIndex) {
   const tracker = trackers.find((item) => item.id === trackerId);
   const task = tracker?.tasks.find((item) => item.id === taskId);
   if (task) task.doneByDay[dayIndex] = !task.doneByDay[dayIndex];
+  saveTrackers(trackers);
+  renderTrackers();
+  grid.querySelector(`[data-tracker-id="${trackerId}"][data-task-id="${taskId}"][data-day-index="${dayIndex}"]`)
+    ?.focus({ preventScroll: true });
+}
+
+function resetWeek() {
+  if (!window.confirm('Clear all checkmarks for this week? Your trackers and tasks will be kept.')) return;
+  const trackers = readTrackers();
+  trackers.forEach((tracker) => {
+    tracker.tasks.forEach((task) => {
+      task.doneByDay = Array(7).fill(false);
+    });
+  });
   saveTrackers(trackers);
   renderTrackers();
 }
@@ -496,7 +517,7 @@ newTrackerForm.addEventListener('submit', (event) => {
   renderTrackers();
 });
 
-resetButton.addEventListener('click', () => {
+resetDemoButton.addEventListener('click', () => {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch {
@@ -504,6 +525,7 @@ resetButton.addEventListener('click', () => {
   }
   renderTrackers();
 });
+resetWeekButton.addEventListener('click', resetWeek);
 
 updateWeekLabel();
 setVisibleRecordFields();
